@@ -1,0 +1,1292 @@
+;/*****************************************************
+;This program was produced by the
+;CodeWizardAVR V2.05.0 Evaluation
+;Automatic Program Generator
+;© Copyright 1998-2010 Pavel Haiduc, HP InfoTech s.r.l.
+;http://www.hpinfotech.com
+;
+;Project :
+;Version :
+;Date    : 6/6/2018
+;Author  : Freeware, for evaluation and non-commercial use only
+;Company :
+;Comments:
+;
+;
+;Chip type               : ATxmega128A1
+;Program type            : Application
+;AVR Core Clock frequency: 2.000000 MHz
+;Memory model            : Small
+;Data Stack size         : 2048
+;*****************************************************/
+;
+;// I/O Registers definitions
+;#include <io.h>
+;
+;// Alphanumeric LCD interface functions
+;#include <alcd.h>
+;
+;// Declare your global variables here
+;
+;// System Clocks initialization
+;void system_clocks_init(void)
+; 0000 0021 {
+
+	.CSEG
+;PCODE: $00000000 VOL: 0
+;PCODE: $00000001 VOL: 0
+; 0000 0022 unsigned char n,s;
+; 0000 0023 
+; 0000 0024 // Optimize for speed
+; 0000 0025 #pragma optsize-
+; 0000 0026 // Save interrupts enabled/disabled state
+; 0000 0027 s=SREG;
+;PCODE: $00000002 VOL: 0
+;PCODE: $00000003 VOL: 0
+;	n -> R17
+;	s -> R16
+;PCODE: $00000004 VOL: 0
+;PCODE: $00000005 VOL: 0
+; 0000 0028 // Disable interrupts
+; 0000 0029 #asm("cli")
+;PCODE: $00000006 VOL: 0
+	cli
+;PCODE: $00000007 VOL: 0
+; 0000 002A 
+; 0000 002B // Internal 2 MHz RC oscillator initialization
+; 0000 002C // Enable the internal 2 MHz RC oscillator
+; 0000 002D OSC.CTRL|=OSC_RC2MEN_bm;
+;PCODE: $00000008 VOL: 1
+;PCODE: $00000009 VOL: 0
+;PCODE: $0000000A VOL: 1
+; 0000 002E 
+; 0000 002F // System Clock prescaler A division factor: 1
+; 0000 0030 // System Clock prescalers B & C division factors: B:1, C:1
+; 0000 0031 // ClkPer4: 2000.000 kHz
+; 0000 0032 // ClkPer2: 2000.000 kHz
+; 0000 0033 // ClkPer:  2000.000 kHz
+; 0000 0034 // ClkCPU:  2000.000 kHz
+; 0000 0035 n=(CLK.PSCTRL & (~(CLK_PSADIV_gm | CLK_PSBCDIV1_bm | CLK_PSBCDIV0_bm))) |
+; 0000 0036 	CLK_PSADIV_1_gc | CLK_PSBCDIV_1_1_gc;
+;PCODE: $0000000B VOL: 1
+;PCODE: $0000000C VOL: 0
+;PCODE: $0000000D VOL: 0
+;PCODE: $0000000E VOL: 0
+;PCODE: $0000000F VOL: 0
+; 0000 0037 CCP=CCP_IOREG_gc;
+;PCODE: $00000010 VOL: 0
+;PCODE: $00000011 VOL: 0
+; 0000 0038 CLK.PSCTRL=n;
+;PCODE: $00000012 VOL: 1
+;PCODE: $00000013 VOL: 0
+; 0000 0039 
+; 0000 003A // Disable the autocalibration of the internal 2 MHz RC oscillator
+; 0000 003B DFLLRC2M.CTRL&= ~DFLL_ENABLE_bm;
+;PCODE: $00000014 VOL: 1
+;PCODE: $00000015 VOL: 0
+;PCODE: $00000016 VOL: 1
+; 0000 003C 
+; 0000 003D // Wait for the internal 2 MHz RC oscillator to stabilize
+; 0000 003E while ((OSC.STATUS & OSC_RC2MRDY_bm)==0);
+;PCODE: $00000017 VOL: 0
+;PCODE: $00000018 VOL: 1
+;PCODE: $00000019 VOL: 0
+;PCODE: $0000001A VOL: 0
+;PCODE: $0000001B VOL: 0
+;PCODE: $0000001C VOL: 0
+; 0000 003F 
+; 0000 0040 // Select the system clock source: 2 MHz Internal RC Osc.
+; 0000 0041 n=(CLK.CTRL & (~CLK_SCLKSEL_gm)) | CLK_SCLKSEL_RC2M_gc;
+;PCODE: $0000001D VOL: 1
+;PCODE: $0000001E VOL: 0
+;PCODE: $0000001F VOL: 0
+;PCODE: $00000020 VOL: 0
+; 0000 0042 CCP=CCP_IOREG_gc;
+;PCODE: $00000021 VOL: 0
+;PCODE: $00000022 VOL: 0
+; 0000 0043 CLK.CTRL=n;
+;PCODE: $00000023 VOL: 1
+;PCODE: $00000024 VOL: 0
+; 0000 0044 
+; 0000 0045 // Disable the unused oscillators: 32 MHz, 32 kHz, external clock/crystal oscillator, PLL
+; 0000 0046 OSC.CTRL&= ~(OSC_RC32MEN_bm | OSC_RC32KEN_bm | OSC_XOSCEN_bm | OSC_PLLEN_bm);
+;PCODE: $00000025 VOL: 1
+;PCODE: $00000026 VOL: 0
+;PCODE: $00000027 VOL: 1
+; 0000 0047 
+; 0000 0048 // Peripheral Clock output: Disabled
+; 0000 0049 PORTCFG.CLKEVOUT=(PORTCFG.CLKEVOUT & (~PORTCFG_CLKOUT_gm)) | PORTCFG_CLKOUT_OFF_gc;
+;PCODE: $00000028 VOL: 1
+;PCODE: $00000029 VOL: 0
+;PCODE: $0000002A VOL: 0
+;PCODE: $0000002B VOL: 1
+; 0000 004A 
+; 0000 004B // Restore interrupts enabled/disabled state
+; 0000 004C SREG=s;
+;PCODE: $0000002C VOL: 0
+;PCODE: $0000002D VOL: 0
+; 0000 004D // Restore optimization for size if needed
+; 0000 004E #pragma optsize_default
+; 0000 004F }
+;PCODE: $0000002E VOL: 0
+;PCODE: $0000002F VOL: 0
+;PCODE: $00000030 VOL: 0
+;
+;// Ports initialization
+;void ports_init(void)
+; 0000 0053 {
+;PCODE: $00000031 VOL: 0
+;PCODE: $00000032 VOL: 0
+; 0000 0054 // PORTA initialization
+; 0000 0055 // OUT register
+; 0000 0056 PORTA.OUT=0x00;
+;PCODE: $00000033 VOL: 0
+;PCODE: $00000034 VOL: 1
+; 0000 0057 // Bit0: Input
+; 0000 0058 // Bit1: Input
+; 0000 0059 // Bit2: Input
+; 0000 005A // Bit3: Input
+; 0000 005B // Bit4: Input
+; 0000 005C // Bit5: Input
+; 0000 005D // Bit6: Input
+; 0000 005E // Bit7: Input
+; 0000 005F PORTA.DIR=0x00;
+;PCODE: $00000035 VOL: 0
+;PCODE: $00000036 VOL: 1
+; 0000 0060 // Bit0 Output/Pull configuration: Totempole/No
+; 0000 0061 // Bit0 Input/Sense configuration: Sense both edges
+; 0000 0062 // Bit0 inverted: Off
+; 0000 0063 // Bit0 slew rate limitation: Off
+; 0000 0064 PORTA.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000037 VOL: 0
+;PCODE: $00000038 VOL: 1
+; 0000 0065 // Bit1 Output/Pull configuration: Totempole/No
+; 0000 0066 // Bit1 Input/Sense configuration: Sense both edges
+; 0000 0067 // Bit1 inverted: Off
+; 0000 0068 // Bit1 slew rate limitation: Off
+; 0000 0069 PORTA.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000039 VOL: 0
+;PCODE: $0000003A VOL: 1
+; 0000 006A // Bit2 Output/Pull configuration: Totempole/No
+; 0000 006B // Bit2 Input/Sense configuration: Sense both edges
+; 0000 006C // Bit2 inverted: Off
+; 0000 006D // Bit2 slew rate limitation: Off
+; 0000 006E PORTA.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000003B VOL: 0
+;PCODE: $0000003C VOL: 1
+; 0000 006F // Bit3 Output/Pull configuration: Totempole/No
+; 0000 0070 // Bit3 Input/Sense configuration: Sense both edges
+; 0000 0071 // Bit3 inverted: Off
+; 0000 0072 // Bit3 slew rate limitation: Off
+; 0000 0073 PORTA.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000003D VOL: 0
+;PCODE: $0000003E VOL: 1
+; 0000 0074 // Bit4 Output/Pull configuration: Totempole/No
+; 0000 0075 // Bit4 Input/Sense configuration: Sense both edges
+; 0000 0076 // Bit4 inverted: Off
+; 0000 0077 // Bit4 slew rate limitation: Off
+; 0000 0078 PORTA.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000003F VOL: 0
+;PCODE: $00000040 VOL: 1
+; 0000 0079 // Bit5 Output/Pull configuration: Totempole/No
+; 0000 007A // Bit5 Input/Sense configuration: Sense both edges
+; 0000 007B // Bit5 inverted: Off
+; 0000 007C // Bit5 slew rate limitation: Off
+; 0000 007D PORTA.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000041 VOL: 0
+;PCODE: $00000042 VOL: 1
+; 0000 007E // Bit6 Output/Pull configuration: Totempole/No
+; 0000 007F // Bit6 Input/Sense configuration: Sense both edges
+; 0000 0080 // Bit6 inverted: Off
+; 0000 0081 // Bit6 slew rate limitation: Off
+; 0000 0082 PORTA.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000043 VOL: 0
+;PCODE: $00000044 VOL: 1
+; 0000 0083 // Bit7 Output/Pull configuration: Totempole/No
+; 0000 0084 // Bit7 Input/Sense configuration: Sense both edges
+; 0000 0085 // Bit7 inverted: Off
+; 0000 0086 // Bit7 slew rate limitation: Off
+; 0000 0087 PORTA.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000045 VOL: 0
+;PCODE: $00000046 VOL: 1
+; 0000 0088 // Interrupt 0 level: Disabled
+; 0000 0089 // Interrupt 1 level: Disabled
+; 0000 008A PORTA.INTCTRL=(PORTA.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 008B 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $00000047 VOL: 1
+;PCODE: $00000048 VOL: 0
+;PCODE: $00000049 VOL: 0
+;PCODE: $0000004A VOL: 0
+;PCODE: $0000004B VOL: 1
+; 0000 008C // Bit0 pin change interrupt 0: Off
+; 0000 008D // Bit1 pin change interrupt 0: Off
+; 0000 008E // Bit2 pin change interrupt 0: Off
+; 0000 008F // Bit3 pin change interrupt 0: Off
+; 0000 0090 // Bit4 pin change interrupt 0: Off
+; 0000 0091 // Bit5 pin change interrupt 0: Off
+; 0000 0092 // Bit6 pin change interrupt 0: Off
+; 0000 0093 // Bit7 pin change interrupt 0: Off
+; 0000 0094 PORTA.INT0MASK=0x00;
+;PCODE: $0000004C VOL: 0
+;PCODE: $0000004D VOL: 1
+; 0000 0095 // Bit0 pin change interrupt 1: Off
+; 0000 0096 // Bit1 pin change interrupt 1: Off
+; 0000 0097 // Bit2 pin change interrupt 1: Off
+; 0000 0098 // Bit3 pin change interrupt 1: Off
+; 0000 0099 // Bit4 pin change interrupt 1: Off
+; 0000 009A // Bit5 pin change interrupt 1: Off
+; 0000 009B // Bit6 pin change interrupt 1: Off
+; 0000 009C // Bit7 pin change interrupt 1: Off
+; 0000 009D PORTA.INT1MASK=0x00;
+;PCODE: $0000004E VOL: 0
+;PCODE: $0000004F VOL: 1
+; 0000 009E 
+; 0000 009F // PORTB initialization
+; 0000 00A0 // OUT register
+; 0000 00A1 PORTB.OUT=0x00;
+;PCODE: $00000050 VOL: 0
+;PCODE: $00000051 VOL: 1
+; 0000 00A2 // Bit0: Input
+; 0000 00A3 // Bit1: Input
+; 0000 00A4 // Bit2: Input
+; 0000 00A5 // Bit3: Input
+; 0000 00A6 // Bit4: Input
+; 0000 00A7 // Bit5: Input
+; 0000 00A8 // Bit6: Input
+; 0000 00A9 // Bit7: Input
+; 0000 00AA PORTB.DIR=0x00;
+;PCODE: $00000052 VOL: 0
+;PCODE: $00000053 VOL: 1
+; 0000 00AB // Bit0 Output/Pull configuration: Totempole/No
+; 0000 00AC // Bit0 Input/Sense configuration: Sense both edges
+; 0000 00AD // Bit0 inverted: Off
+; 0000 00AE // Bit0 slew rate limitation: Off
+; 0000 00AF PORTB.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000054 VOL: 0
+;PCODE: $00000055 VOL: 1
+; 0000 00B0 // Bit1 Output/Pull configuration: Totempole/No
+; 0000 00B1 // Bit1 Input/Sense configuration: Sense both edges
+; 0000 00B2 // Bit1 inverted: Off
+; 0000 00B3 // Bit1 slew rate limitation: Off
+; 0000 00B4 PORTB.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000056 VOL: 0
+;PCODE: $00000057 VOL: 1
+; 0000 00B5 // Bit2 Output/Pull configuration: Totempole/No
+; 0000 00B6 // Bit2 Input/Sense configuration: Sense both edges
+; 0000 00B7 // Bit2 inverted: Off
+; 0000 00B8 // Bit2 slew rate limitation: Off
+; 0000 00B9 PORTB.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000058 VOL: 0
+;PCODE: $00000059 VOL: 1
+; 0000 00BA // Bit3 Output/Pull configuration: Totempole/No
+; 0000 00BB // Bit3 Input/Sense configuration: Sense both edges
+; 0000 00BC // Bit3 inverted: Off
+; 0000 00BD // Bit3 slew rate limitation: Off
+; 0000 00BE PORTB.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000005A VOL: 0
+;PCODE: $0000005B VOL: 1
+; 0000 00BF // Bit4 Output/Pull configuration: Totempole/No
+; 0000 00C0 // Bit4 Input/Sense configuration: Sense both edges
+; 0000 00C1 // Bit4 inverted: Off
+; 0000 00C2 // Bit4 slew rate limitation: Off
+; 0000 00C3 PORTB.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000005C VOL: 0
+;PCODE: $0000005D VOL: 1
+; 0000 00C4 // Bit5 Output/Pull configuration: Totempole/No
+; 0000 00C5 // Bit5 Input/Sense configuration: Sense both edges
+; 0000 00C6 // Bit5 inverted: Off
+; 0000 00C7 // Bit5 slew rate limitation: Off
+; 0000 00C8 PORTB.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000005E VOL: 0
+;PCODE: $0000005F VOL: 1
+; 0000 00C9 // Bit6 Output/Pull configuration: Totempole/No
+; 0000 00CA // Bit6 Input/Sense configuration: Sense both edges
+; 0000 00CB // Bit6 inverted: Off
+; 0000 00CC // Bit6 slew rate limitation: Off
+; 0000 00CD PORTB.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000060 VOL: 0
+;PCODE: $00000061 VOL: 1
+; 0000 00CE // Bit7 Output/Pull configuration: Totempole/No
+; 0000 00CF // Bit7 Input/Sense configuration: Sense both edges
+; 0000 00D0 // Bit7 inverted: Off
+; 0000 00D1 // Bit7 slew rate limitation: Off
+; 0000 00D2 PORTB.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000062 VOL: 0
+;PCODE: $00000063 VOL: 1
+; 0000 00D3 // Interrupt 0 level: Disabled
+; 0000 00D4 // Interrupt 1 level: Disabled
+; 0000 00D5 PORTB.INTCTRL=(PORTB.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 00D6 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $00000064 VOL: 1
+;PCODE: $00000065 VOL: 0
+;PCODE: $00000066 VOL: 0
+;PCODE: $00000067 VOL: 0
+;PCODE: $00000068 VOL: 1
+; 0000 00D7 // Bit0 pin change interrupt 0: Off
+; 0000 00D8 // Bit1 pin change interrupt 0: Off
+; 0000 00D9 // Bit2 pin change interrupt 0: Off
+; 0000 00DA // Bit3 pin change interrupt 0: Off
+; 0000 00DB // Bit4 pin change interrupt 0: Off
+; 0000 00DC // Bit5 pin change interrupt 0: Off
+; 0000 00DD // Bit6 pin change interrupt 0: Off
+; 0000 00DE // Bit7 pin change interrupt 0: Off
+; 0000 00DF PORTB.INT0MASK=0x00;
+;PCODE: $00000069 VOL: 0
+;PCODE: $0000006A VOL: 1
+; 0000 00E0 // Bit0 pin change interrupt 1: Off
+; 0000 00E1 // Bit1 pin change interrupt 1: Off
+; 0000 00E2 // Bit2 pin change interrupt 1: Off
+; 0000 00E3 // Bit3 pin change interrupt 1: Off
+; 0000 00E4 // Bit4 pin change interrupt 1: Off
+; 0000 00E5 // Bit5 pin change interrupt 1: Off
+; 0000 00E6 // Bit6 pin change interrupt 1: Off
+; 0000 00E7 // Bit7 pin change interrupt 1: Off
+; 0000 00E8 PORTB.INT1MASK=0x00;
+;PCODE: $0000006B VOL: 0
+;PCODE: $0000006C VOL: 1
+; 0000 00E9 
+; 0000 00EA // PORTC initialization
+; 0000 00EB // OUT register
+; 0000 00EC PORTC.OUT=0x00;
+;PCODE: $0000006D VOL: 0
+;PCODE: $0000006E VOL: 1
+; 0000 00ED // Bit0: Input
+; 0000 00EE // Bit1: Input
+; 0000 00EF // Bit2: Input
+; 0000 00F0 // Bit3: Input
+; 0000 00F1 // Bit4: Input
+; 0000 00F2 // Bit5: Input
+; 0000 00F3 // Bit6: Input
+; 0000 00F4 // Bit7: Input
+; 0000 00F5 PORTC.DIR=0x00;
+;PCODE: $0000006F VOL: 0
+;PCODE: $00000070 VOL: 1
+; 0000 00F6 // Bit0 Output/Pull configuration: Totempole/No
+; 0000 00F7 // Bit0 Input/Sense configuration: Sense both edges
+; 0000 00F8 // Bit0 inverted: Off
+; 0000 00F9 // Bit0 slew rate limitation: Off
+; 0000 00FA PORTC.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000071 VOL: 0
+;PCODE: $00000072 VOL: 1
+; 0000 00FB // Bit1 Output/Pull configuration: Totempole/No
+; 0000 00FC // Bit1 Input/Sense configuration: Sense both edges
+; 0000 00FD // Bit1 inverted: Off
+; 0000 00FE // Bit1 slew rate limitation: Off
+; 0000 00FF PORTC.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000073 VOL: 0
+;PCODE: $00000074 VOL: 1
+; 0000 0100 // Bit2 Output/Pull configuration: Totempole/No
+; 0000 0101 // Bit2 Input/Sense configuration: Sense both edges
+; 0000 0102 // Bit2 inverted: Off
+; 0000 0103 // Bit2 slew rate limitation: Off
+; 0000 0104 PORTC.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000075 VOL: 0
+;PCODE: $00000076 VOL: 1
+; 0000 0105 // Bit3 Output/Pull configuration: Totempole/No
+; 0000 0106 // Bit3 Input/Sense configuration: Sense both edges
+; 0000 0107 // Bit3 inverted: Off
+; 0000 0108 // Bit3 slew rate limitation: Off
+; 0000 0109 PORTC.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000077 VOL: 0
+;PCODE: $00000078 VOL: 1
+; 0000 010A // Bit4 Output/Pull configuration: Totempole/No
+; 0000 010B // Bit4 Input/Sense configuration: Sense both edges
+; 0000 010C // Bit4 inverted: Off
+; 0000 010D // Bit4 slew rate limitation: Off
+; 0000 010E PORTC.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000079 VOL: 0
+;PCODE: $0000007A VOL: 1
+; 0000 010F // Bit5 Output/Pull configuration: Totempole/No
+; 0000 0110 // Bit5 Input/Sense configuration: Sense both edges
+; 0000 0111 // Bit5 inverted: Off
+; 0000 0112 // Bit5 slew rate limitation: Off
+; 0000 0113 PORTC.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000007B VOL: 0
+;PCODE: $0000007C VOL: 1
+; 0000 0114 // Bit6 Output/Pull configuration: Totempole/No
+; 0000 0115 // Bit6 Input/Sense configuration: Sense both edges
+; 0000 0116 // Bit6 inverted: Off
+; 0000 0117 // Bit6 slew rate limitation: Off
+; 0000 0118 PORTC.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000007D VOL: 0
+;PCODE: $0000007E VOL: 1
+; 0000 0119 // Bit7 Output/Pull configuration: Totempole/No
+; 0000 011A // Bit7 Input/Sense configuration: Sense both edges
+; 0000 011B // Bit7 inverted: Off
+; 0000 011C // Bit7 slew rate limitation: Off
+; 0000 011D PORTC.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000007F VOL: 0
+;PCODE: $00000080 VOL: 1
+; 0000 011E // Interrupt 0 level: Disabled
+; 0000 011F // Interrupt 1 level: Disabled
+; 0000 0120 PORTC.INTCTRL=(PORTC.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 0121 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $00000081 VOL: 1
+;PCODE: $00000082 VOL: 0
+;PCODE: $00000083 VOL: 0
+;PCODE: $00000084 VOL: 0
+;PCODE: $00000085 VOL: 1
+; 0000 0122 // Bit0 pin change interrupt 0: Off
+; 0000 0123 // Bit1 pin change interrupt 0: Off
+; 0000 0124 // Bit2 pin change interrupt 0: Off
+; 0000 0125 // Bit3 pin change interrupt 0: Off
+; 0000 0126 // Bit4 pin change interrupt 0: Off
+; 0000 0127 // Bit5 pin change interrupt 0: Off
+; 0000 0128 // Bit6 pin change interrupt 0: Off
+; 0000 0129 // Bit7 pin change interrupt 0: Off
+; 0000 012A PORTC.INT0MASK=0x00;
+;PCODE: $00000086 VOL: 0
+;PCODE: $00000087 VOL: 1
+; 0000 012B // Bit0 pin change interrupt 1: Off
+; 0000 012C // Bit1 pin change interrupt 1: Off
+; 0000 012D // Bit2 pin change interrupt 1: Off
+; 0000 012E // Bit3 pin change interrupt 1: Off
+; 0000 012F // Bit4 pin change interrupt 1: Off
+; 0000 0130 // Bit5 pin change interrupt 1: Off
+; 0000 0131 // Bit6 pin change interrupt 1: Off
+; 0000 0132 // Bit7 pin change interrupt 1: Off
+; 0000 0133 PORTC.INT1MASK=0x00;
+;PCODE: $00000088 VOL: 0
+;PCODE: $00000089 VOL: 1
+; 0000 0134 
+; 0000 0135 // PORTD initialization
+; 0000 0136 // OUT register
+; 0000 0137 PORTD.OUT=0x00;
+;PCODE: $0000008A VOL: 0
+;PCODE: $0000008B VOL: 1
+; 0000 0138 // Bit0: Input
+; 0000 0139 // Bit1: Input
+; 0000 013A // Bit2: Input
+; 0000 013B // Bit3: Input
+; 0000 013C // Bit4: Input
+; 0000 013D // Bit5: Input
+; 0000 013E // Bit6: Input
+; 0000 013F // Bit7: Input
+; 0000 0140 PORTD.DIR=0x00;
+;PCODE: $0000008C VOL: 0
+;PCODE: $0000008D VOL: 1
+; 0000 0141 // Bit0 Output/Pull configuration: Totempole/No
+; 0000 0142 // Bit0 Input/Sense configuration: Sense both edges
+; 0000 0143 // Bit0 inverted: Off
+; 0000 0144 // Bit0 slew rate limitation: Off
+; 0000 0145 PORTD.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000008E VOL: 0
+;PCODE: $0000008F VOL: 1
+; 0000 0146 // Bit1 Output/Pull configuration: Totempole/No
+; 0000 0147 // Bit1 Input/Sense configuration: Sense both edges
+; 0000 0148 // Bit1 inverted: Off
+; 0000 0149 // Bit1 slew rate limitation: Off
+; 0000 014A PORTD.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000090 VOL: 0
+;PCODE: $00000091 VOL: 1
+; 0000 014B // Bit2 Output/Pull configuration: Totempole/No
+; 0000 014C // Bit2 Input/Sense configuration: Sense both edges
+; 0000 014D // Bit2 inverted: Off
+; 0000 014E // Bit2 slew rate limitation: Off
+; 0000 014F PORTD.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000092 VOL: 0
+;PCODE: $00000093 VOL: 1
+; 0000 0150 // Bit3 Output/Pull configuration: Totempole/No
+; 0000 0151 // Bit3 Input/Sense configuration: Sense both edges
+; 0000 0152 // Bit3 inverted: Off
+; 0000 0153 // Bit3 slew rate limitation: Off
+; 0000 0154 PORTD.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000094 VOL: 0
+;PCODE: $00000095 VOL: 1
+; 0000 0155 // Bit4 Output/Pull configuration: Totempole/No
+; 0000 0156 // Bit4 Input/Sense configuration: Sense both edges
+; 0000 0157 // Bit4 inverted: Off
+; 0000 0158 // Bit4 slew rate limitation: Off
+; 0000 0159 PORTD.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000096 VOL: 0
+;PCODE: $00000097 VOL: 1
+; 0000 015A // Bit5 Output/Pull configuration: Totempole/No
+; 0000 015B // Bit5 Input/Sense configuration: Sense both edges
+; 0000 015C // Bit5 inverted: Off
+; 0000 015D // Bit5 slew rate limitation: Off
+; 0000 015E PORTD.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000098 VOL: 0
+;PCODE: $00000099 VOL: 1
+; 0000 015F // Bit6 Output/Pull configuration: Totempole/No
+; 0000 0160 // Bit6 Input/Sense configuration: Sense both edges
+; 0000 0161 // Bit6 inverted: Off
+; 0000 0162 // Bit6 slew rate limitation: Off
+; 0000 0163 PORTD.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000009A VOL: 0
+;PCODE: $0000009B VOL: 1
+; 0000 0164 // Bit7 Output/Pull configuration: Totempole/No
+; 0000 0165 // Bit7 Input/Sense configuration: Sense both edges
+; 0000 0166 // Bit7 inverted: Off
+; 0000 0167 // Bit7 slew rate limitation: Off
+; 0000 0168 PORTD.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000009C VOL: 0
+;PCODE: $0000009D VOL: 1
+; 0000 0169 // Interrupt 0 level: Disabled
+; 0000 016A // Interrupt 1 level: Disabled
+; 0000 016B PORTD.INTCTRL=(PORTD.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 016C 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $0000009E VOL: 1
+;PCODE: $0000009F VOL: 0
+;PCODE: $000000A0 VOL: 0
+;PCODE: $000000A1 VOL: 0
+;PCODE: $000000A2 VOL: 1
+; 0000 016D // Bit0 pin change interrupt 0: Off
+; 0000 016E // Bit1 pin change interrupt 0: Off
+; 0000 016F // Bit2 pin change interrupt 0: Off
+; 0000 0170 // Bit3 pin change interrupt 0: Off
+; 0000 0171 // Bit4 pin change interrupt 0: Off
+; 0000 0172 // Bit5 pin change interrupt 0: Off
+; 0000 0173 // Bit6 pin change interrupt 0: Off
+; 0000 0174 // Bit7 pin change interrupt 0: Off
+; 0000 0175 PORTD.INT0MASK=0x00;
+;PCODE: $000000A3 VOL: 0
+;PCODE: $000000A4 VOL: 1
+; 0000 0176 // Bit0 pin change interrupt 1: Off
+; 0000 0177 // Bit1 pin change interrupt 1: Off
+; 0000 0178 // Bit2 pin change interrupt 1: Off
+; 0000 0179 // Bit3 pin change interrupt 1: Off
+; 0000 017A // Bit4 pin change interrupt 1: Off
+; 0000 017B // Bit5 pin change interrupt 1: Off
+; 0000 017C // Bit6 pin change interrupt 1: Off
+; 0000 017D // Bit7 pin change interrupt 1: Off
+; 0000 017E PORTD.INT1MASK=0x00;
+;PCODE: $000000A5 VOL: 0
+;PCODE: $000000A6 VOL: 1
+; 0000 017F 
+; 0000 0180 // PORTE initialization
+; 0000 0181 // OUT register
+; 0000 0182 PORTE.OUT=0x00;
+;PCODE: $000000A7 VOL: 0
+;PCODE: $000000A8 VOL: 1
+; 0000 0183 // Bit0: Input
+; 0000 0184 // Bit1: Input
+; 0000 0185 // Bit2: Input
+; 0000 0186 // Bit3: Input
+; 0000 0187 // Bit4: Input
+; 0000 0188 // Bit5: Input
+; 0000 0189 // Bit6: Input
+; 0000 018A // Bit7: Input
+; 0000 018B PORTE.DIR=0x00;
+;PCODE: $000000A9 VOL: 0
+;PCODE: $000000AA VOL: 1
+; 0000 018C // Bit0 Output/Pull configuration: Totempole/No
+; 0000 018D // Bit0 Input/Sense configuration: Sense both edges
+; 0000 018E // Bit0 inverted: Off
+; 0000 018F // Bit0 slew rate limitation: Off
+; 0000 0190 PORTE.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000AB VOL: 0
+;PCODE: $000000AC VOL: 1
+; 0000 0191 // Bit1 Output/Pull configuration: Totempole/No
+; 0000 0192 // Bit1 Input/Sense configuration: Sense both edges
+; 0000 0193 // Bit1 inverted: Off
+; 0000 0194 // Bit1 slew rate limitation: Off
+; 0000 0195 PORTE.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000AD VOL: 0
+;PCODE: $000000AE VOL: 1
+; 0000 0196 // Bit2 Output/Pull configuration: Totempole/No
+; 0000 0197 // Bit2 Input/Sense configuration: Sense both edges
+; 0000 0198 // Bit2 inverted: Off
+; 0000 0199 // Bit2 slew rate limitation: Off
+; 0000 019A PORTE.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000AF VOL: 0
+;PCODE: $000000B0 VOL: 1
+; 0000 019B // Bit3 Output/Pull configuration: Totempole/No
+; 0000 019C // Bit3 Input/Sense configuration: Sense both edges
+; 0000 019D // Bit3 inverted: Off
+; 0000 019E // Bit3 slew rate limitation: Off
+; 0000 019F PORTE.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B1 VOL: 0
+;PCODE: $000000B2 VOL: 1
+; 0000 01A0 // Bit4 Output/Pull configuration: Totempole/No
+; 0000 01A1 // Bit4 Input/Sense configuration: Sense both edges
+; 0000 01A2 // Bit4 inverted: Off
+; 0000 01A3 // Bit4 slew rate limitation: Off
+; 0000 01A4 PORTE.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B3 VOL: 0
+;PCODE: $000000B4 VOL: 1
+; 0000 01A5 // Bit5 Output/Pull configuration: Totempole/No
+; 0000 01A6 // Bit5 Input/Sense configuration: Sense both edges
+; 0000 01A7 // Bit5 inverted: Off
+; 0000 01A8 // Bit5 slew rate limitation: Off
+; 0000 01A9 PORTE.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B5 VOL: 0
+;PCODE: $000000B6 VOL: 1
+; 0000 01AA // Bit6 Output/Pull configuration: Totempole/No
+; 0000 01AB // Bit6 Input/Sense configuration: Sense both edges
+; 0000 01AC // Bit6 inverted: Off
+; 0000 01AD // Bit6 slew rate limitation: Off
+; 0000 01AE PORTE.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B7 VOL: 0
+;PCODE: $000000B8 VOL: 1
+; 0000 01AF // Bit7 Output/Pull configuration: Totempole/No
+; 0000 01B0 // Bit7 Input/Sense configuration: Sense both edges
+; 0000 01B1 // Bit7 inverted: Off
+; 0000 01B2 // Bit7 slew rate limitation: Off
+; 0000 01B3 PORTE.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B9 VOL: 0
+;PCODE: $000000BA VOL: 1
+; 0000 01B4 // Interrupt 0 level: Disabled
+; 0000 01B5 // Interrupt 1 level: Disabled
+; 0000 01B6 PORTE.INTCTRL=(PORTE.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 01B7 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $000000BB VOL: 1
+;PCODE: $000000BC VOL: 0
+;PCODE: $000000BD VOL: 0
+;PCODE: $000000BE VOL: 0
+;PCODE: $000000BF VOL: 1
+; 0000 01B8 // Bit0 pin change interrupt 0: Off
+; 0000 01B9 // Bit1 pin change interrupt 0: Off
+; 0000 01BA // Bit2 pin change interrupt 0: Off
+; 0000 01BB // Bit3 pin change interrupt 0: Off
+; 0000 01BC // Bit4 pin change interrupt 0: Off
+; 0000 01BD // Bit5 pin change interrupt 0: Off
+; 0000 01BE // Bit6 pin change interrupt 0: Off
+; 0000 01BF // Bit7 pin change interrupt 0: Off
+; 0000 01C0 PORTE.INT0MASK=0x00;
+;PCODE: $000000C0 VOL: 0
+;PCODE: $000000C1 VOL: 1
+; 0000 01C1 // Bit0 pin change interrupt 1: Off
+; 0000 01C2 // Bit1 pin change interrupt 1: Off
+; 0000 01C3 // Bit2 pin change interrupt 1: Off
+; 0000 01C4 // Bit3 pin change interrupt 1: Off
+; 0000 01C5 // Bit4 pin change interrupt 1: Off
+; 0000 01C6 // Bit5 pin change interrupt 1: Off
+; 0000 01C7 // Bit6 pin change interrupt 1: Off
+; 0000 01C8 // Bit7 pin change interrupt 1: Off
+; 0000 01C9 PORTE.INT1MASK=0x00;
+;PCODE: $000000C2 VOL: 0
+;PCODE: $000000C3 VOL: 1
+; 0000 01CA 
+; 0000 01CB // PORTF initialization
+; 0000 01CC // OUT register
+; 0000 01CD PORTF.OUT=0x00;
+;PCODE: $000000C4 VOL: 0
+;PCODE: $000000C5 VOL: 1
+; 0000 01CE // Bit0: Input
+; 0000 01CF // Bit1: Input
+; 0000 01D0 // Bit2: Input
+; 0000 01D1 // Bit3: Input
+; 0000 01D2 // Bit4: Input
+; 0000 01D3 // Bit5: Input
+; 0000 01D4 // Bit6: Input
+; 0000 01D5 // Bit7: Input
+; 0000 01D6 PORTF.DIR=0x00;
+;PCODE: $000000C6 VOL: 0
+;PCODE: $000000C7 VOL: 1
+; 0000 01D7 // Bit0 Output/Pull configuration: Totempole/No
+; 0000 01D8 // Bit0 Input/Sense configuration: Sense both edges
+; 0000 01D9 // Bit0 inverted: Off
+; 0000 01DA // Bit0 slew rate limitation: Off
+; 0000 01DB PORTF.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000C8 VOL: 0
+;PCODE: $000000C9 VOL: 1
+; 0000 01DC // Bit1 Output/Pull configuration: Totempole/No
+; 0000 01DD // Bit1 Input/Sense configuration: Sense both edges
+; 0000 01DE // Bit1 inverted: Off
+; 0000 01DF // Bit1 slew rate limitation: Off
+; 0000 01E0 PORTF.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000CA VOL: 0
+;PCODE: $000000CB VOL: 1
+; 0000 01E1 // Bit2 Output/Pull configuration: Totempole/No
+; 0000 01E2 // Bit2 Input/Sense configuration: Sense both edges
+; 0000 01E3 // Bit2 inverted: Off
+; 0000 01E4 // Bit2 slew rate limitation: Off
+; 0000 01E5 PORTF.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000CC VOL: 0
+;PCODE: $000000CD VOL: 1
+; 0000 01E6 // Bit3 Output/Pull configuration: Totempole/No
+; 0000 01E7 // Bit3 Input/Sense configuration: Sense both edges
+; 0000 01E8 // Bit3 inverted: Off
+; 0000 01E9 // Bit3 slew rate limitation: Off
+; 0000 01EA PORTF.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000CE VOL: 0
+;PCODE: $000000CF VOL: 1
+; 0000 01EB // Bit4 Output/Pull configuration: Totempole/No
+; 0000 01EC // Bit4 Input/Sense configuration: Sense both edges
+; 0000 01ED // Bit4 inverted: Off
+; 0000 01EE // Bit4 slew rate limitation: Off
+; 0000 01EF PORTF.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000D0 VOL: 0
+;PCODE: $000000D1 VOL: 1
+; 0000 01F0 // Bit5 Output/Pull configuration: Totempole/No
+; 0000 01F1 // Bit5 Input/Sense configuration: Sense both edges
+; 0000 01F2 // Bit5 inverted: Off
+; 0000 01F3 // Bit5 slew rate limitation: Off
+; 0000 01F4 PORTF.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000D2 VOL: 0
+;PCODE: $000000D3 VOL: 1
+; 0000 01F5 // Bit6 Output/Pull configuration: Totempole/No
+; 0000 01F6 // Bit6 Input/Sense configuration: Sense both edges
+; 0000 01F7 // Bit6 inverted: Off
+; 0000 01F8 // Bit6 slew rate limitation: Off
+; 0000 01F9 PORTF.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000D4 VOL: 0
+;PCODE: $000000D5 VOL: 1
+; 0000 01FA // Bit7 Output/Pull configuration: Totempole/No
+; 0000 01FB // Bit7 Input/Sense configuration: Sense both edges
+; 0000 01FC // Bit7 inverted: Off
+; 0000 01FD // Bit7 slew rate limitation: Off
+; 0000 01FE PORTF.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000D6 VOL: 0
+;PCODE: $000000D7 VOL: 1
+; 0000 01FF // Interrupt 0 level: Disabled
+; 0000 0200 // Interrupt 1 level: Disabled
+; 0000 0201 PORTF.INTCTRL=(PORTF.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 0202 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $000000D8 VOL: 1
+;PCODE: $000000D9 VOL: 0
+;PCODE: $000000DA VOL: 0
+;PCODE: $000000DB VOL: 0
+;PCODE: $000000DC VOL: 1
+; 0000 0203 // Bit0 pin change interrupt 0: Off
+; 0000 0204 // Bit1 pin change interrupt 0: Off
+; 0000 0205 // Bit2 pin change interrupt 0: Off
+; 0000 0206 // Bit3 pin change interrupt 0: Off
+; 0000 0207 // Bit4 pin change interrupt 0: Off
+; 0000 0208 // Bit5 pin change interrupt 0: Off
+; 0000 0209 // Bit6 pin change interrupt 0: Off
+; 0000 020A // Bit7 pin change interrupt 0: Off
+; 0000 020B PORTF.INT0MASK=0x00;
+;PCODE: $000000DD VOL: 0
+;PCODE: $000000DE VOL: 1
+; 0000 020C // Bit0 pin change interrupt 1: Off
+; 0000 020D // Bit1 pin change interrupt 1: Off
+; 0000 020E // Bit2 pin change interrupt 1: Off
+; 0000 020F // Bit3 pin change interrupt 1: Off
+; 0000 0210 // Bit4 pin change interrupt 1: Off
+; 0000 0211 // Bit5 pin change interrupt 1: Off
+; 0000 0212 // Bit6 pin change interrupt 1: Off
+; 0000 0213 // Bit7 pin change interrupt 1: Off
+; 0000 0214 PORTF.INT1MASK=0x00;
+;PCODE: $000000DF VOL: 0
+;PCODE: $000000E0 VOL: 1
+; 0000 0215 
+; 0000 0216 // PORTH initialization
+; 0000 0217 // OUT register
+; 0000 0218 PORTH.OUT=0x00;
+;PCODE: $000000E1 VOL: 0
+;PCODE: $000000E2 VOL: 1
+; 0000 0219 // Bit0: Input
+; 0000 021A // Bit1: Input
+; 0000 021B // Bit2: Input
+; 0000 021C // Bit3: Input
+; 0000 021D // Bit4: Input
+; 0000 021E // Bit5: Input
+; 0000 021F // Bit6: Input
+; 0000 0220 // Bit7: Input
+; 0000 0221 PORTH.DIR=0x00;
+;PCODE: $000000E3 VOL: 0
+;PCODE: $000000E4 VOL: 1
+; 0000 0222 // Bit0 Output/Pull configuration: Totempole/No
+; 0000 0223 // Bit0 Input/Sense configuration: Sense both edges
+; 0000 0224 // Bit0 inverted: Off
+; 0000 0225 // Bit0 slew rate limitation: Off
+; 0000 0226 PORTH.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000E5 VOL: 0
+;PCODE: $000000E6 VOL: 1
+; 0000 0227 // Bit1 Output/Pull configuration: Totempole/No
+; 0000 0228 // Bit1 Input/Sense configuration: Sense both edges
+; 0000 0229 // Bit1 inverted: Off
+; 0000 022A // Bit1 slew rate limitation: Off
+; 0000 022B PORTH.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000E7 VOL: 0
+;PCODE: $000000E8 VOL: 1
+; 0000 022C // Bit2 Output/Pull configuration: Totempole/No
+; 0000 022D // Bit2 Input/Sense configuration: Sense both edges
+; 0000 022E // Bit2 inverted: Off
+; 0000 022F // Bit2 slew rate limitation: Off
+; 0000 0230 PORTH.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000E9 VOL: 0
+;PCODE: $000000EA VOL: 1
+; 0000 0231 // Bit3 Output/Pull configuration: Totempole/No
+; 0000 0232 // Bit3 Input/Sense configuration: Sense both edges
+; 0000 0233 // Bit3 inverted: Off
+; 0000 0234 // Bit3 slew rate limitation: Off
+; 0000 0235 PORTH.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000EB VOL: 0
+;PCODE: $000000EC VOL: 1
+; 0000 0236 // Bit4 Output/Pull configuration: Totempole/No
+; 0000 0237 // Bit4 Input/Sense configuration: Sense both edges
+; 0000 0238 // Bit4 inverted: Off
+; 0000 0239 // Bit4 slew rate limitation: Off
+; 0000 023A PORTH.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000ED VOL: 0
+;PCODE: $000000EE VOL: 1
+; 0000 023B // Bit5 Output/Pull configuration: Totempole/No
+; 0000 023C // Bit5 Input/Sense configuration: Sense both edges
+; 0000 023D // Bit5 inverted: Off
+; 0000 023E // Bit5 slew rate limitation: Off
+; 0000 023F PORTH.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000EF VOL: 0
+;PCODE: $000000F0 VOL: 1
+; 0000 0240 // Bit6 Output/Pull configuration: Totempole/No
+; 0000 0241 // Bit6 Input/Sense configuration: Sense both edges
+; 0000 0242 // Bit6 inverted: Off
+; 0000 0243 // Bit6 slew rate limitation: Off
+; 0000 0244 PORTH.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000F1 VOL: 0
+;PCODE: $000000F2 VOL: 1
+; 0000 0245 // Bit7 Output/Pull configuration: Totempole/No
+; 0000 0246 // Bit7 Input/Sense configuration: Sense both edges
+; 0000 0247 // Bit7 inverted: Off
+; 0000 0248 // Bit7 slew rate limitation: Off
+; 0000 0249 PORTH.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000F3 VOL: 0
+;PCODE: $000000F4 VOL: 1
+; 0000 024A // Interrupt 0 level: Disabled
+; 0000 024B // Interrupt 1 level: Disabled
+; 0000 024C PORTH.INTCTRL=(PORTH.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 024D 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $000000F5 VOL: 1
+;PCODE: $000000F6 VOL: 0
+;PCODE: $000000F7 VOL: 0
+;PCODE: $000000F8 VOL: 0
+;PCODE: $000000F9 VOL: 1
+; 0000 024E // Bit0 pin change interrupt 0: Off
+; 0000 024F // Bit1 pin change interrupt 0: Off
+; 0000 0250 // Bit2 pin change interrupt 0: Off
+; 0000 0251 // Bit3 pin change interrupt 0: Off
+; 0000 0252 // Bit4 pin change interrupt 0: Off
+; 0000 0253 // Bit5 pin change interrupt 0: Off
+; 0000 0254 // Bit6 pin change interrupt 0: Off
+; 0000 0255 // Bit7 pin change interrupt 0: Off
+; 0000 0256 PORTH.INT0MASK=0x00;
+;PCODE: $000000FA VOL: 0
+;PCODE: $000000FB VOL: 1
+; 0000 0257 // Bit0 pin change interrupt 1: Off
+; 0000 0258 // Bit1 pin change interrupt 1: Off
+; 0000 0259 // Bit2 pin change interrupt 1: Off
+; 0000 025A // Bit3 pin change interrupt 1: Off
+; 0000 025B // Bit4 pin change interrupt 1: Off
+; 0000 025C // Bit5 pin change interrupt 1: Off
+; 0000 025D // Bit6 pin change interrupt 1: Off
+; 0000 025E // Bit7 pin change interrupt 1: Off
+; 0000 025F PORTH.INT1MASK=0x00;
+;PCODE: $000000FC VOL: 0
+;PCODE: $000000FD VOL: 1
+; 0000 0260 
+; 0000 0261 // PORTJ initialization
+; 0000 0262 // OUT register
+; 0000 0263 PORTJ.OUT=0x00;
+;PCODE: $000000FE VOL: 0
+;PCODE: $000000FF VOL: 1
+; 0000 0264 // Bit0: Input
+; 0000 0265 // Bit1: Input
+; 0000 0266 // Bit2: Input
+; 0000 0267 // Bit3: Input
+; 0000 0268 // Bit4: Input
+; 0000 0269 // Bit5: Input
+; 0000 026A // Bit6: Input
+; 0000 026B // Bit7: Input
+; 0000 026C PORTJ.DIR=0x00;
+;PCODE: $00000100 VOL: 0
+;PCODE: $00000101 VOL: 1
+; 0000 026D // Bit0 Output/Pull configuration: Totempole/No
+; 0000 026E // Bit0 Input/Sense configuration: Sense both edges
+; 0000 026F // Bit0 inverted: Off
+; 0000 0270 // Bit0 slew rate limitation: Off
+; 0000 0271 PORTJ.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000102 VOL: 0
+;PCODE: $00000103 VOL: 1
+; 0000 0272 // Bit1 Output/Pull configuration: Totempole/No
+; 0000 0273 // Bit1 Input/Sense configuration: Sense both edges
+; 0000 0274 // Bit1 inverted: Off
+; 0000 0275 // Bit1 slew rate limitation: Off
+; 0000 0276 PORTJ.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000104 VOL: 0
+;PCODE: $00000105 VOL: 1
+; 0000 0277 // Bit2 Output/Pull configuration: Totempole/No
+; 0000 0278 // Bit2 Input/Sense configuration: Sense both edges
+; 0000 0279 // Bit2 inverted: Off
+; 0000 027A // Bit2 slew rate limitation: Off
+; 0000 027B PORTJ.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000106 VOL: 0
+;PCODE: $00000107 VOL: 1
+; 0000 027C // Bit3 Output/Pull configuration: Totempole/No
+; 0000 027D // Bit3 Input/Sense configuration: Sense both edges
+; 0000 027E // Bit3 inverted: Off
+; 0000 027F // Bit3 slew rate limitation: Off
+; 0000 0280 PORTJ.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000108 VOL: 0
+;PCODE: $00000109 VOL: 1
+; 0000 0281 // Bit4 Output/Pull configuration: Totempole/No
+; 0000 0282 // Bit4 Input/Sense configuration: Sense both edges
+; 0000 0283 // Bit4 inverted: Off
+; 0000 0284 // Bit4 slew rate limitation: Off
+; 0000 0285 PORTJ.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000010A VOL: 0
+;PCODE: $0000010B VOL: 1
+; 0000 0286 // Bit5 Output/Pull configuration: Totempole/No
+; 0000 0287 // Bit5 Input/Sense configuration: Sense both edges
+; 0000 0288 // Bit5 inverted: Off
+; 0000 0289 // Bit5 slew rate limitation: Off
+; 0000 028A PORTJ.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000010C VOL: 0
+;PCODE: $0000010D VOL: 1
+; 0000 028B // Bit6 Output/Pull configuration: Totempole/No
+; 0000 028C // Bit6 Input/Sense configuration: Sense both edges
+; 0000 028D // Bit6 inverted: Off
+; 0000 028E // Bit6 slew rate limitation: Off
+; 0000 028F PORTJ.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000010E VOL: 0
+;PCODE: $0000010F VOL: 1
+; 0000 0290 // Bit7 Output/Pull configuration: Totempole/No
+; 0000 0291 // Bit7 Input/Sense configuration: Sense both edges
+; 0000 0292 // Bit7 inverted: Off
+; 0000 0293 // Bit7 slew rate limitation: Off
+; 0000 0294 PORTJ.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000110 VOL: 0
+;PCODE: $00000111 VOL: 1
+; 0000 0295 // Interrupt 0 level: Disabled
+; 0000 0296 // Interrupt 1 level: Disabled
+; 0000 0297 PORTJ.INTCTRL=(PORTJ.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 0298 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $00000112 VOL: 1
+;PCODE: $00000113 VOL: 0
+;PCODE: $00000114 VOL: 0
+;PCODE: $00000115 VOL: 0
+;PCODE: $00000116 VOL: 1
+; 0000 0299 // Bit0 pin change interrupt 0: Off
+; 0000 029A // Bit1 pin change interrupt 0: Off
+; 0000 029B // Bit2 pin change interrupt 0: Off
+; 0000 029C // Bit3 pin change interrupt 0: Off
+; 0000 029D // Bit4 pin change interrupt 0: Off
+; 0000 029E // Bit5 pin change interrupt 0: Off
+; 0000 029F // Bit6 pin change interrupt 0: Off
+; 0000 02A0 // Bit7 pin change interrupt 0: Off
+; 0000 02A1 PORTJ.INT0MASK=0x00;
+;PCODE: $00000117 VOL: 0
+;PCODE: $00000118 VOL: 1
+; 0000 02A2 // Bit0 pin change interrupt 1: Off
+; 0000 02A3 // Bit1 pin change interrupt 1: Off
+; 0000 02A4 // Bit2 pin change interrupt 1: Off
+; 0000 02A5 // Bit3 pin change interrupt 1: Off
+; 0000 02A6 // Bit4 pin change interrupt 1: Off
+; 0000 02A7 // Bit5 pin change interrupt 1: Off
+; 0000 02A8 // Bit6 pin change interrupt 1: Off
+; 0000 02A9 // Bit7 pin change interrupt 1: Off
+; 0000 02AA PORTJ.INT1MASK=0x00;
+;PCODE: $00000119 VOL: 0
+;PCODE: $0000011A VOL: 1
+; 0000 02AB 
+; 0000 02AC // PORTK initialization
+; 0000 02AD // OUT register
+; 0000 02AE PORTK.OUT=0x00;
+;PCODE: $0000011B VOL: 0
+;PCODE: $0000011C VOL: 1
+; 0000 02AF // Bit0: Input
+; 0000 02B0 // Bit1: Input
+; 0000 02B1 // Bit2: Input
+; 0000 02B2 // Bit3: Input
+; 0000 02B3 // Bit4: Input
+; 0000 02B4 // Bit5: Input
+; 0000 02B5 // Bit6: Input
+; 0000 02B6 // Bit7: Input
+; 0000 02B7 PORTK.DIR=0x00;
+;PCODE: $0000011D VOL: 0
+;PCODE: $0000011E VOL: 1
+; 0000 02B8 // Bit0 Output/Pull configuration: Totempole/No
+; 0000 02B9 // Bit0 Input/Sense configuration: Sense both edges
+; 0000 02BA // Bit0 inverted: Off
+; 0000 02BB // Bit0 slew rate limitation: Off
+; 0000 02BC PORTK.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000011F VOL: 0
+;PCODE: $00000120 VOL: 1
+; 0000 02BD // Bit1 Output/Pull configuration: Totempole/No
+; 0000 02BE // Bit1 Input/Sense configuration: Sense both edges
+; 0000 02BF // Bit1 inverted: Off
+; 0000 02C0 // Bit1 slew rate limitation: Off
+; 0000 02C1 PORTK.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000121 VOL: 0
+;PCODE: $00000122 VOL: 1
+; 0000 02C2 // Bit2 Output/Pull configuration: Totempole/No
+; 0000 02C3 // Bit2 Input/Sense configuration: Sense both edges
+; 0000 02C4 // Bit2 inverted: Off
+; 0000 02C5 // Bit2 slew rate limitation: Off
+; 0000 02C6 PORTK.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000123 VOL: 0
+;PCODE: $00000124 VOL: 1
+; 0000 02C7 // Bit3 Output/Pull configuration: Totempole/No
+; 0000 02C8 // Bit3 Input/Sense configuration: Sense both edges
+; 0000 02C9 // Bit3 inverted: Off
+; 0000 02CA // Bit3 slew rate limitation: Off
+; 0000 02CB PORTK.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000125 VOL: 0
+;PCODE: $00000126 VOL: 1
+; 0000 02CC // Bit4 Output/Pull configuration: Totempole/No
+; 0000 02CD // Bit4 Input/Sense configuration: Sense both edges
+; 0000 02CE // Bit4 inverted: Off
+; 0000 02CF // Bit4 slew rate limitation: Off
+; 0000 02D0 PORTK.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000127 VOL: 0
+;PCODE: $00000128 VOL: 1
+; 0000 02D1 // Bit5 Output/Pull configuration: Totempole/No
+; 0000 02D2 // Bit5 Input/Sense configuration: Sense both edges
+; 0000 02D3 // Bit5 inverted: Off
+; 0000 02D4 // Bit5 slew rate limitation: Off
+; 0000 02D5 PORTK.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000129 VOL: 0
+;PCODE: $0000012A VOL: 1
+; 0000 02D6 // Bit6 Output/Pull configuration: Totempole/No
+; 0000 02D7 // Bit6 Input/Sense configuration: Sense both edges
+; 0000 02D8 // Bit6 inverted: Off
+; 0000 02D9 // Bit6 slew rate limitation: Off
+; 0000 02DA PORTK.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000012B VOL: 0
+;PCODE: $0000012C VOL: 1
+; 0000 02DB // Bit7 Output/Pull configuration: Totempole/No
+; 0000 02DC // Bit7 Input/Sense configuration: Sense both edges
+; 0000 02DD // Bit7 inverted: Off
+; 0000 02DE // Bit7 slew rate limitation: Off
+; 0000 02DF PORTK.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000012D VOL: 0
+;PCODE: $0000012E VOL: 1
+; 0000 02E0 // Interrupt 0 level: Disabled
+; 0000 02E1 // Interrupt 1 level: Disabled
+; 0000 02E2 PORTK.INTCTRL=(PORTK.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 02E3 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $0000012F VOL: 1
+;PCODE: $00000130 VOL: 0
+;PCODE: $00000131 VOL: 0
+;PCODE: $00000132 VOL: 0
+;PCODE: $00000133 VOL: 1
+; 0000 02E4 // Bit0 pin change interrupt 0: Off
+; 0000 02E5 // Bit1 pin change interrupt 0: Off
+; 0000 02E6 // Bit2 pin change interrupt 0: Off
+; 0000 02E7 // Bit3 pin change interrupt 0: Off
+; 0000 02E8 // Bit4 pin change interrupt 0: Off
+; 0000 02E9 // Bit5 pin change interrupt 0: Off
+; 0000 02EA // Bit6 pin change interrupt 0: Off
+; 0000 02EB // Bit7 pin change interrupt 0: Off
+; 0000 02EC PORTK.INT0MASK=0x00;
+;PCODE: $00000134 VOL: 0
+;PCODE: $00000135 VOL: 1
+; 0000 02ED // Bit0 pin change interrupt 1: Off
+; 0000 02EE // Bit1 pin change interrupt 1: Off
+; 0000 02EF // Bit2 pin change interrupt 1: Off
+; 0000 02F0 // Bit3 pin change interrupt 1: Off
+; 0000 02F1 // Bit4 pin change interrupt 1: Off
+; 0000 02F2 // Bit5 pin change interrupt 1: Off
+; 0000 02F3 // Bit6 pin change interrupt 1: Off
+; 0000 02F4 // Bit7 pin change interrupt 1: Off
+; 0000 02F5 PORTK.INT1MASK=0x00;
+;PCODE: $00000136 VOL: 0
+;PCODE: $00000137 VOL: 1
+; 0000 02F6 
+; 0000 02F7 // PORTQ initialization
+; 0000 02F8 // OUT register
+; 0000 02F9 PORTQ.OUT=0x00;
+;PCODE: $00000138 VOL: 0
+;PCODE: $00000139 VOL: 1
+; 0000 02FA // Bit0: Input
+; 0000 02FB // Bit1: Input
+; 0000 02FC // Bit2: Input
+; 0000 02FD // Bit3: Input
+; 0000 02FE PORTQ.DIR=0x00;
+;PCODE: $0000013A VOL: 0
+;PCODE: $0000013B VOL: 1
+; 0000 02FF // Bit0 Output/Pull configuration: Totempole/No
+; 0000 0300 // Bit0 Input/Sense configuration: Sense both edges
+; 0000 0301 // Bit0 inverted: Off
+; 0000 0302 // Bit0 slew rate limitation: Off
+; 0000 0303 PORTQ.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000013C VOL: 0
+;PCODE: $0000013D VOL: 1
+; 0000 0304 // Bit1 Output/Pull configuration: Totempole/No
+; 0000 0305 // Bit1 Input/Sense configuration: Sense both edges
+; 0000 0306 // Bit1 inverted: Off
+; 0000 0307 // Bit1 slew rate limitation: Off
+; 0000 0308 PORTQ.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000013E VOL: 0
+;PCODE: $0000013F VOL: 1
+; 0000 0309 // Bit2 Output/Pull configuration: Totempole/No
+; 0000 030A // Bit2 Input/Sense configuration: Sense both edges
+; 0000 030B // Bit2 inverted: Off
+; 0000 030C // Bit2 slew rate limitation: Off
+; 0000 030D PORTQ.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000140 VOL: 0
+;PCODE: $00000141 VOL: 1
+; 0000 030E // Bit3 Output/Pull configuration: Totempole/No
+; 0000 030F // Bit3 Input/Sense configuration: Sense both edges
+; 0000 0310 // Bit3 inverted: Off
+; 0000 0311 // Bit3 slew rate limitation: Off
+; 0000 0312 PORTQ.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000142 VOL: 0
+;PCODE: $00000143 VOL: 1
+; 0000 0313 // Interrupt 0 level: Disabled
+; 0000 0314 // Interrupt 1 level: Disabled
+; 0000 0315 PORTQ.INTCTRL=(PORTQ.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 0316 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $00000144 VOL: 1
+;PCODE: $00000145 VOL: 0
+;PCODE: $00000146 VOL: 0
+;PCODE: $00000147 VOL: 0
+;PCODE: $00000148 VOL: 1
+; 0000 0317 // Bit0 pin change interrupt 0: Off
+; 0000 0318 // Bit1 pin change interrupt 0: Off
+; 0000 0319 // Bit2 pin change interrupt 0: Off
+; 0000 031A // Bit3 pin change interrupt 0: Off
+; 0000 031B PORTQ.INT0MASK=0x00;
+;PCODE: $00000149 VOL: 0
+;PCODE: $0000014A VOL: 1
+; 0000 031C // Bit0 pin change interrupt 1: Off
+; 0000 031D // Bit1 pin change interrupt 1: Off
+; 0000 031E // Bit2 pin change interrupt 1: Off
+; 0000 031F // Bit3 pin change interrupt 1: Off
+; 0000 0320 PORTQ.INT1MASK=0x00;
+;PCODE: $0000014B VOL: 0
+;PCODE: $0000014C VOL: 1
+; 0000 0321 
+; 0000 0322 // PORTR initialization
+; 0000 0323 // OUT register
+; 0000 0324 PORTR.OUT=0x00;
+;PCODE: $0000014D VOL: 0
+;PCODE: $0000014E VOL: 1
+; 0000 0325 // Bit0: Input
+; 0000 0326 // Bit1: Input
+; 0000 0327 PORTR.DIR=0x00;
+;PCODE: $0000014F VOL: 0
+;PCODE: $00000150 VOL: 1
+; 0000 0328 // Bit0 Output/Pull configuration: Totempole/No
+; 0000 0329 // Bit0 Input/Sense configuration: Sense both edges
+; 0000 032A // Bit0 inverted: Off
+; 0000 032B // Bit0 slew rate limitation: Off
+; 0000 032C PORTR.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000151 VOL: 0
+;PCODE: $00000152 VOL: 1
+; 0000 032D // Bit1 Output/Pull configuration: Totempole/No
+; 0000 032E // Bit1 Input/Sense configuration: Sense both edges
+; 0000 032F // Bit1 inverted: Off
+; 0000 0330 // Bit1 slew rate limitation: Off
+; 0000 0331 PORTR.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000153 VOL: 0
+;PCODE: $00000154 VOL: 1
+; 0000 0332 // Interrupt 0 level: Disabled
+; 0000 0333 // Interrupt 1 level: Disabled
+; 0000 0334 PORTR.INTCTRL=(PORTR.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 0335 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $00000155 VOL: 1
+;PCODE: $00000156 VOL: 0
+;PCODE: $00000157 VOL: 0
+;PCODE: $00000158 VOL: 0
+;PCODE: $00000159 VOL: 1
+; 0000 0336 // Bit0 pin change interrupt 0: Off
+; 0000 0337 // Bit1 pin change interrupt 0: Off
+; 0000 0338 PORTR.INT0MASK=0x00;
+;PCODE: $0000015A VOL: 0
+;PCODE: $0000015B VOL: 1
+; 0000 0339 // Bit0 pin change interrupt 1: Off
+; 0000 033A // Bit1 pin change interrupt 1: Off
+; 0000 033B PORTR.INT1MASK=0x00;
+;PCODE: $0000015C VOL: 0
+;PCODE: $0000015D VOL: 1
+; 0000 033C }
+;PCODE: $0000015E VOL: 0
+;PCODE: $0000015F VOL: 0
+;
+;// Virtual Ports initialization
+;void vports_init(void)
+; 0000 0340 {
+;PCODE: $00000160 VOL: 0
+;PCODE: $00000161 VOL: 0
+; 0000 0341 // PORTA mapped to VPORT0
+; 0000 0342 // PORTB mapped to VPORT1
+; 0000 0343 PORTCFG.VPCTRLA=PORTCFG_VP1MAP_PORTB_gc | PORTCFG_VP0MAP_PORTA_gc;
+;PCODE: $00000162 VOL: 0
+;PCODE: $00000163 VOL: 1
+; 0000 0344 // PORTC mapped to VPORT2
+; 0000 0345 // PORTD mapped to VPORT3
+; 0000 0346 PORTCFG.VPCTRLB=PORTCFG_VP3MAP_PORTD_gc | PORTCFG_VP2MAP_PORTC_gc;
+;PCODE: $00000164 VOL: 0
+;PCODE: $00000165 VOL: 1
+; 0000 0347 }
+;PCODE: $00000166 VOL: 0
+;PCODE: $00000167 VOL: 0
+;
+;void main(void)
+; 0000 034A {
+;PCODE: $00000168 VOL: 0
+; 0000 034B // Declare your local variables here
+; 0000 034C unsigned char n;
+; 0000 034D 
+; 0000 034E // Interrupt system initialization
+; 0000 034F // Optimize for speed
+; 0000 0350 #pragma optsize-
+; 0000 0351 // Make sure the interrupts are disabled
+; 0000 0352 #asm("cli")
+;	n -> R17
+;PCODE: $00000169 VOL: 0
+	cli
+;PCODE: $0000016A VOL: 0
+; 0000 0353 // Low level interrupt: Off
+; 0000 0354 // Round-robin scheduling for low level interrupt: Off
+; 0000 0355 // Medium level interrupt: Off
+; 0000 0356 // High level interrupt: Off
+; 0000 0357 // The interrupt vectors will be placed at the start of the Application FLASH section
+; 0000 0358 n=(PMIC.CTRL & (~(PMIC_RREN_bm | PMIC_IVSEL_bm | PMIC_HILVLEN_bm | PMIC_MEDLVLEN_bm | PMIC_LOLVLEN_bm)));
+;PCODE: $0000016B VOL: 1
+;PCODE: $0000016C VOL: 0
+;PCODE: $0000016D VOL: 0
+; 0000 0359 CCP=CCP_IOREG_gc;
+;PCODE: $0000016E VOL: 0
+;PCODE: $0000016F VOL: 0
+; 0000 035A PMIC.CTRL=n;
+;PCODE: $00000170 VOL: 1
+;PCODE: $00000171 VOL: 0
+; 0000 035B // Set the default priority for round-robin scheduling
+; 0000 035C PMIC.INTPRI=0x00;
+;PCODE: $00000172 VOL: 0
+;PCODE: $00000173 VOL: 1
+; 0000 035D // Restore optimization for size if needed
+; 0000 035E #pragma optsize_default
+; 0000 035F 
+; 0000 0360 // System clocks initialization
+; 0000 0361 system_clocks_init();
+;PCODE: $00000174 VOL: 0
+; 0000 0362 
+; 0000 0363 // Ports initialization
+; 0000 0364 ports_init();
+;PCODE: $00000175 VOL: 0
+; 0000 0365 
+; 0000 0366 // Virtual Ports initialization
+; 0000 0367 vports_init();
+;PCODE: $00000176 VOL: 0
+; 0000 0368 
+; 0000 0369 // Alphanumeric LCD initialization
+; 0000 036A // Connections specified in the
+; 0000 036B // Project|Configure|C Compiler|Libraries|Alphanumeric LCD menu:
+; 0000 036C // RS - PORTA Bit 0
+; 0000 036D // RD - PORTA Bit 1
+; 0000 036E // EN - PORTA Bit 2
+; 0000 036F // D4 - PORTA Bit 4
+; 0000 0370 // D5 - PORTA Bit 5
+; 0000 0371 // D6 - PORTA Bit 6
+; 0000 0372 // D7 - PORTA Bit 7
+; 0000 0373 // Characters/line: 16
+; 0000 0374 lcd_init(16);
+;PCODE: $00000177 VOL: 0
+;PCODE: $00000178 VOL: 0
+;PCODE: $00000179 VOL: 0
+; 0000 0375 
+; 0000 0376 while (1)
+;PCODE: $0000017A VOL: 0
+; 0000 0377       {
+; 0000 0378       lcd_gotoxy(0,0);
+;PCODE: $0000017B VOL: 0
+;PCODE: $0000017C VOL: 0
+;PCODE: $0000017D VOL: 0
+;PCODE: $0000017E VOL: 0
+;PCODE: $0000017F VOL: 0
+; 0000 0379       lcd_putsf("You are welcome");
+;PCODE: $00000180 VOL: 0
+;PCODE: $00000181 VOL: 0
+;PCODE: $00000182 VOL: 0
+;PCODE: $00000183 VOL: 0
+; 0000 037A 
+; 0000 037B       }
+;PCODE: $00000184 VOL: 0
+;PCODE: $00000185 VOL: 0
+; 0000 037C }
+;PCODE: $00000186 VOL: 0
+;PCODE: $00000187 VOL: 0
+;PCODE: $00000188 VOL: 0
